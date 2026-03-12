@@ -1,0 +1,64 @@
+package control;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import dao.BookDAO;
+import entity.User;
+
+/**
+ * Servlet implementation class LoginControl
+ */
+@WebServlet(name = "LoginControl", urlPatterns = {"/login"})
+public class LoginControl extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public LoginControl() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// 1. Lấy dữ liệu từ Form (đảm bảo input trong JSP có name="user" và name="pass")
+        String user = request.getParameter("user");
+        String pass = request.getParameter("pass");
+
+        // 2. Gọi DAO để kiểm tra
+        BookDAO dao = new BookDAO();
+        User u = dao.login(user, pass);
+
+        if (u == null) {
+            // Đăng nhập thất bại: Gửi thông báo lỗi quay về trang login.jsp
+            request.setAttribute("error", "Sai tài khoản hoặc mật khẩu!");
+            request.getRequestDispatcher("login.jsp").forward(request, response);
+        } else {
+            // Đăng nhập thành công:
+            // - Lưu user vào Session để dùng ở các trang khác (hiển thị tên, check quyền)
+            HttpSession session = request.getSession();
+            session.setAttribute("acc", u);
+            
+            // - Chuyển sang trang danh sách sách
+            response.sendRedirect("index_1.jsp"); 
+        }
+	}
+
+}
