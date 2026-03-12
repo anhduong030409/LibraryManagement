@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="java.lang.Class">
+		<item key="replaceBarOpen" value="false"/>
+		<list key="findhistory">
+			<item value="form"/>
+			<item value="input"/>
+			<item value="tên "/>
+			<item value="thead"/>
+			<item value="tìm"/>
+			<item value="tbody"/>
+			<item value="tìm kiếm"/>
+			<item value="logout"/>
+			<item value="nav"/>
+			<item value="gener"/>
+			<item value="dashboard"/>
+			<item value="sidebar"/>
+			<item value="href"/>
+			<item value="login"/>
+			<item value="sear"/>
+		</list>
+	</section>
+</section>

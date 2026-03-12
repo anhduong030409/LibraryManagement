@@ -1,0 +1,8 @@
+INDEX VERSION 1.134+D:\LapTrinhWeb\LibraryManagement\LibraryManagement\.metadata\.plugins\org.eclipse.jdt.core
+1865797976.index
+3815875515.index
+2627657950.index
+195604784.index
+2967001851.index
+774472844.index
+468916598.index

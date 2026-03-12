@@ -1,0 +1,12 @@
+package entity;
+
+public class Book {
+    private int id;
+    private String title;
+    private String author;
+    private String category;
+    private int quantity;
+
+    // Chuột phải vào khoảng trống -> Source -> Generate Constructor using Fields
+    // Chuột phải vào khoảng trống -> Source -> Generate Getters and Setters
+}

@@ -1,0 +1,155 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Quản Lý Thư Viện - Dashboard</title>
+
+    <link href="${pageContext.request.contextPath}/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/sb-admin-2.min.css" rel="stylesheet">
+</head>
+
+<body id="page-top">
+
+    <div id="wrapper">
+
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.jsp">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">Thư Viện <sup>Pro</sup></div>
+            </a>
+
+            <hr class="sidebar-divider my-0">
+            <li class="nav-item active">
+                <a class="nav-item active nav-link" href="index.jsp">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Bảng Điều Khiển</span></a>
+            </li>
+
+            <hr class="sidebar-divider">
+            <div class="sidebar-heading">Quản lý chính</div>
+
+            <li class="nav-item">
+                <a class="nav-link" href="books-list.jsp">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Quản lý Sách</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="users-list.jsp">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Quản lý Độc giả</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="borrow-list.jsp">
+                    <i class="fas fa-fw fa-folder"></i>
+                    <span>Phiếu Mượn/Trả</span></a>
+            </li>
+
+            <hr class="sidebar-divider d-none d-md-block">
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <h1 class="h3 mb-0 text-gray-800">Hệ Thống Quản Lý Thư Viện</h1>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Xin chào, Admin</span>
+                                <img class="img-profile rounded-circle" src="${pageContext.request.contextPath}/img/undraw_profile.svg">
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="container-fluid">
+                    <div class="row">
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Tổng số sách</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">1,250 cuốn</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-book-open fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Đang được mượn</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">45 phiếu</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-exchange-alt fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Số lượng độc giả</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">320 người</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-user-graduate fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Thông báo hệ thống</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p>Chào mừng bạn đến với hệ thống quản lý thư viện. Hãy sử dụng menu bên trái để thực hiện các thao tác quản lý sách và độc giả.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                </div>
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Đồ án Thư Viện 2026</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="${pageContext.request.contextPath}/vendor/jquery/jquery.min.js"></script>
+    <script src="${pageContext.request.contextPath}/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/sb-admin-2.min.js"></script>
+</body>
+</html>

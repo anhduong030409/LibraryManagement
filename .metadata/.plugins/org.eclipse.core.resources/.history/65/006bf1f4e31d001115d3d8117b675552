@@ -1,0 +1,39 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="container-fluid">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Thông tin chi tiết: ${book.title}</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <img src="img/book-cover-default.jpg" class="img-fluid rounded shadow" alt="Cover">
+                </div>
+                <div class="col-md-8">
+                    <h2 class="text-dark font-weight-bold">${book.title}</h2>
+                    <p class="mb-1"><strong>Tác giả:</strong> ${book.author}</p>
+                    <p class="mb-1"><strong>Thể loại:</strong> <span class="badge badge-info">${book.category}</span></p>
+                    <p class="mb-1"><strong>Số lượng còn lại:</strong> ${book.quantity}</p>
+                    <hr>
+                    <p><strong>Mô tả:</strong> Đây là nội dung giới thiệu tóm tắt về cuốn sách giúp độc giả hiểu rõ hơn về giá trị và kiến thức mà cuốn sách mang lại...</p>
+                    
+                    <div class="mt-4">
+                        <a href="books" class="btn btn-secondary btn-sm">Quay lại danh sách</a>
+                        <button class="btn btn-success btn-sm">Đăng ký mượn</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

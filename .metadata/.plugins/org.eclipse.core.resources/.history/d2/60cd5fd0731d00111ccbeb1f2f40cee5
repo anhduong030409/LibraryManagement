@@ -1,0 +1,105 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Quản lý Sách - Thư Viện</title>
+    <link href="${pageContext.request.contextPath}/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="${pageContext.request.contextPath}/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <jsp:include page="sidebar.jsp"></jsp:include>
+        <jsp:include page="navbar.jsp"></jsp:include>
+        
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <h1 class="h3 mb-0 text-gray-800">Danh Mục Sách Trong Kho</h1>
+                    <!-- Topbar Search -->
+                    <form
+                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        <div class="input-group">
+                            <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm..."
+                                aria-label="Search" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="button">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <ul class="navbar-nav ml-auto">
+                   
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Xin chào, Admin</span>
+                                <img class="img-profile rounded-circle" src="${pageContext.request.contextPath}/img/undraw_profile.svg">
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="container-fluid">
+                    <div class="mb-4">
+                        <a href="#" class="btn btn-primary btn-icon-split">
+                            <span class="icon text-white-50"><i class="fas fa-plus"></i></span>
+                            <span class="text">Thêm sách mới</span>
+                        </a>
+                    </div>
+
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Danh sách đầu sách</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Tên sách</th>
+                                            <th>Tác giả</th>
+                                            <th>Thể loại</th>
+                                            <th>Số lượng</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Lập trình Java Web</td>
+                                            <td>Nguyễn Văn A</td>
+                                            <td>Giáo trình</td>
+                                            <td>15</td>
+                                            <td>
+                                                <a href="#" class="btn btn-warning btn-sm">Sửa</a>
+                                                <a href="#" class="btn btn-danger btn-sm">Xóa</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="${pageContext.request.contextPath}/vendor/jquery/jquery.min.js"></script>
+    <script src="${pageContext.request.contextPath}/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/sb-admin-2.min.js"></script>
+    <script src="${pageContext.request.contextPath}/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="${pageContext.request.contextPath}/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#dataTable').DataTable(); // Kích hoạt tính năng tìm kiếm/phân trang
+        });
+    </script>
+</body>
+</html>
