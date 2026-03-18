@@ -1,40 +1,78 @@
 package entity;
 
 public class Book {
-    private int id;
-    private String title;
-    private String author;
-    private String category;
-    private int quantity;
-    private String image; // Thêm mới
+	private int id;
+	private String title;
+	private String author;
+	private String category;
+	private int quantity;
+	private String image; // Thêm mới
 
-    public Book() {}
+	public Book() {
+	}
 
-    public Book(int id, String title, String author, String category, int quantity, String image) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.category = category;
-        this.quantity = quantity;
-        this.image = image;
-    }
+	// 1. Constructor cho hàm getListBookForBorrow (2 tham số)
+	public Book(int id, String title) {
+		this.id = id;
+		this.title = title;
+	}
 
-    // BẮT BUỘC PHẢI CÓ CÁC HÀM NÀY:
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+	// 1. Constructor cho hàm getListBookForBorrow (2 tham số)
+	public Book(int id, String title, String author, String category, int quantity, String image) {
+		this.id = id;
+		this.title = title;
+		this.author = author;
+		this.category = category;
+		this.quantity = quantity;
+		this.image = image;
+	}
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+	// BẮT BUỘC PHẢI CÓ CÁC HÀM NÀY:
+	public int getId() {
+		return id;
+	}
 
-    public String getAuthor() { return author; }
-    public void setAuthor(String author) { this.author = author; }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+	public String getTitle() {
+		return title;
+	}
 
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
-    
-    public String getImage() { return image; }
-    public void setImage(String image) { this.image = image; }
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
 }

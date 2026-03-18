@@ -1,0 +1,30 @@
+package control;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.BookDAO;
+
+/**
+ * Servlet implementation class LoadTicketServlet
+ */
+@WebServlet(name = "LoadTicketServlet", urlPatterns = {"/loadTicket"})
+public class LoadTicketServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        String id = request.getParameter("tid");
+        BookDAO dao = new BookDAO();
+        
+        // Đẩy dữ liệu vào request
+        request.setAttribute("ticket", dao.getTicketByID(id)); 
+        request.setAttribute("listR", dao.getListReaderForBorrow());
+        request.setAttribute("listBooks", dao.getAllBooks()); // Hiện tất cả sách để chọn lại
+        
+        // Chuyển sang trang JSP sửa
+        request.getRequestDispatcher("edit-borrow.jsp").forward(request, response);
+    }
+}

@@ -1,0 +1,67 @@
+package control;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.BookDAO;
+
+/**
+ * Servlet implementation class ExportServlet
+ */
+@WebServlet("/export")
+public class ExportServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+	        throws ServletException, IOException {
+	    // SỬA LỖI 1: Đổi ContentType sang .xls để Excel hiểu định dạng HTML Table
+	    response.setContentType("application/vnd.ms-excel");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Content-Disposition", "attachment; filename=bao_cao_thu_vien.xls");
+
+	    PrintWriter writer = response.getWriter();
+	    BookDAO dao = new BookDAO();
+	    List<String[]> data = dao.getReportData();
+
+	    // Bắt đầu ghi cấu trúc bảng HTML
+	    writer.println("<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:excel' xmlns='http://www.w3.org/TR/REC-html40'>");
+	    writer.println("<head><meta charset='UTF-8'></head><body>");
+	    writer.println("<table border='1'>");
+	    
+	    // SỬA LỖI 2: In đậm và căn giữa hàng tiêu đề
+	    writer.println("<tr style='background-color: #f2f2f2; font-weight: bold;'>");
+	    writer.println("<th align='center'>Tên độc giả</th>");
+	    writer.println("<th align='center'>Danh sách sách</th>");
+	    writer.println("<th align='center'>Ngày mượn</th>");
+	    writer.println("<th align='center'>Hạn trả</th>");
+	    writer.println("<th align='center'>Trạng thái</th>");
+	    writer.println("</tr>");
+
+	    // Ghi các hàng dữ liệu
+	    for (String[] row : data) {
+	        writer.println("<tr>");
+	        for (int i = 0; i < row.length; i++) {
+	            String cellData = (row[i] != null) ? row[i] : "";
+	            
+	            // SỬA LỖI 3: Ép xuống dòng ngay ngắn trong một ô
+	            if (i == 1) { 
+	                cellData = cellData.replace("; ", "<br style='mso-data-placement:same-cell;'>");
+	                cellData = cellData.replace(";", "<br style='mso-data-placement:same-cell;'>");
+	            }
+	            
+	            writer.println("<td style='vertical-align: top;'" + cellData + "</td>");
+	        }
+	        writer.println("</tr>");
+	    }
+	    
+	    writer.println("</table></body></html>");
+	}
+
+}

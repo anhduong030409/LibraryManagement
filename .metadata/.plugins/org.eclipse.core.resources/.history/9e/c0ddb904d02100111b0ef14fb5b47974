@@ -1,0 +1,51 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="updateTicket" method="post">
+    <input type="hidden" name="tid" value="${ticket.id}">
+
+    <div class="form-group">
+        <label>Chọn Độc Giả:</label>
+        <select name="rid" class="form-control">
+            <c:forEach items="${listR}" var="r">
+                <option value="${r.id}" ${r.id == ticket.readerId ? 'selected' : ''}>
+                    ${r.fullname}
+                </option>
+            </c:forEach>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Chọn Sách Mượn:</label>
+        <select name="bid" id="bookSelectEdit" class="form-control" multiple="multiple">
+            <c:forEach items="${listBooks}" var="b">
+                <option value="${b.id}" 
+                    <c:if test="${ticket.bookIds.contains(b.id.toString())}">selected</c:if>>
+                    ${b.title}
+                </option>
+            </c:forEach>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Hạn trả:</label>
+        <input type="text" name="ddate" value="${ticket.dueDate}" class="form-control date-input">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
+</form>
+
+<script>
+    $(document).ready(function() {
+        $('#bookSelectEdit').select2({ theme: 'bootstrap4' });
+    });
+</script>
+
+</body>
+</html>

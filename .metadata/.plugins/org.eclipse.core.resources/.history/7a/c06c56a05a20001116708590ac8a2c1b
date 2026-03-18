@@ -1,0 +1,52 @@
+package control;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.BookDAO;
+import entity.BorrowTicket;
+
+/**
+ * Servlet implementation class LoadTicketControl
+ */
+@WebServlet("/loadTicket")
+public class LoadTicketControl extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public LoadTicketControl() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        String tidStr = request.getParameter("tid");
+        
+        // Kiểm tra nếu tidStr bị null hoặc rỗng trước khi ép kiểu
+        if (tidStr == null || tidStr.isEmpty()) {
+            response.sendRedirect("borrow"); // Quay lại trang danh sách nếu lỗi
+            return;
+        }
+
+        try {
+            int tid = Integer.parseInt(tidStr);
+            BookDAO dao = new BookDAO();
+            BorrowTicket t = dao.getTicketByID(tid);
+            request.setAttribute("st", t);
+            request.getRequestDispatcher("edit-ticket.jsp").forward(request, response);
+        } catch (NumberFormatException e) {
+            response.sendRedirect("borrow");
+        }
+    }
+
+}

@@ -1,0 +1,57 @@
+package control;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.BookDAO;
+
+/**
+ * Servlet implementation class ExportServlet
+ */
+@WebServlet("/export")
+public class ExportServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+	        throws ServletException, IOException {
+	    response.setContentType("text/csv; charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Content-Disposition", "attachment; filename=bao_cao_thu_vien.csv");
+
+	    // Thêm BOM (Byte Order Mark) để Excel nhận diện được tiếng Việt có dấu
+	    response.getWriter().write('\ufeff');
+
+	    BookDAO dao = new BookDAO();
+	    List<String[]> data = dao.getReportData();
+
+	    PrintWriter writer = response.getWriter();
+	 // Ghi tiêu đề cột (Dùng dấu ; để Excel tự động chia cột)
+	    writer.println("Tên độc giả;Danh sách sách;Ngày mượn;Hạn trả;Trạng thái");
+
+	    // Ghi dữ liệu từng dòng
+	    for (String[] row : data) {
+	        StringBuilder sb = new StringBuilder();
+	        for (int i = 0; i < row.length; i++) {
+	            // 1. Xử lý dữ liệu: Thay thế dấu xuống dòng bằng dấu phẩy để không bị nhảy hàng trong Excel
+	            String cellData = row[i].replace("\n", ", ").replace("\r", "");
+	            
+	            // 2. Bọc dữ liệu trong dấu ngoặc kép "" để tránh lỗi khi chính dữ liệu có dấu phân cách
+	            sb.append("\"").append(cellData).append("\"");
+	            
+	            // 3. Thêm dấu phân cách cột (;) trừ cột cuối cùng
+	            if (i < row.length - 1) {
+	                sb.append(";");
+	            }
+	        }
+	        writer.println(sb.toString());
+	    }
+	}
+
+}

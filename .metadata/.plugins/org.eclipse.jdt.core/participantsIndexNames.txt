@@ -1,3 +1,5 @@
 INDEX VERSION 1.134
 D:\LapTrinhWeb\QUAN_LY_THU_VIEN\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2042160596.index
 \LibraryManagement\src\main\java
+D:\LapTrinhWeb\LibraryManagement\.metadata\.plugins\org.eclipse.jst.jsp.core\jspsearch\2042160596.index
+\LibraryManagement\src\main\java

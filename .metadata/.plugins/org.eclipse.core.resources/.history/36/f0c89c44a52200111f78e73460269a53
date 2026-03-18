@@ -1,0 +1,40 @@
+package control;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.BookDAO;
+import entity.Book;
+import entity.BorrowTicket;
+import entity.Reader;
+
+/**
+ * Servlet implementation class BorrowControl
+ */
+@WebServlet(name = "BorrowControl", urlPatterns = {"/borrow"})
+public class BorrowControl extends HttpServlet {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+	        throws ServletException, IOException {
+	    BookDAO dao = new BookDAO();
+	    
+	    // 1. Lấy danh sách phiếu mượn cho cái bảng
+	    List<BorrowTicket> listB = dao.getAllBorrowTickets();
+	    
+	    // 2. PHẢI CÓ: Lấy danh sách cho Modal thêm mới
+	    List<Reader> listR = dao.getListReaderForBorrow();
+	    List<Book> listBooks = dao.getListBookForBorrow();
+	    
+	    // 3. Đẩy tất cả lên request (Tên biến phải khớp với items="..." trong JSP)
+	    request.setAttribute("listB", listB);       // Cho cái bảng chính
+	    request.setAttribute("listR", listR);       // Cho dropdown Độc giả
+	    request.setAttribute("listBooks", listBooks); // Cho dropdown Sách
+	    
+	    request.getRequestDispatcher("borrow-list.jsp").forward(request, response);
+	}
+}

@@ -1,0 +1,32 @@
+package control;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.BookDAO;
+
+/**
+ * Servlet implementation class UpdateTicketServlet
+ */
+@WebServlet(name = "UpdateTicketServlet", urlPatterns = {"/updateTicket"})
+public class UpdateTicketServlet extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        
+        int tid = Integer.parseInt(request.getParameter("tid"));
+        int rid = Integer.parseInt(request.getParameter("rid"));
+        String ddate = request.getParameter("ddate");
+        String[] bids = request.getParameterValues("bid");
+
+        BookDAO dao = new BookDAO();
+        dao.updateTicket(tid, rid, ddate, bids);
+        
+        // Quay lại trang danh sách (Thay bằng URL Servlet của bạn)
+        response.sendRedirect("borrow"); 
+    }
+}

@@ -1,0 +1,73 @@
+package entity;
+
+public class Reader {
+	private int id;
+	private String student_id;
+	private String fullname;
+	private String email;
+	private String phone;
+	private String join_date;
+
+	public Reader() {
+	}
+
+	public Reader(int id, String student_id, String fullname) {
+		this.id = id;
+		this.student_id = student_id;
+		this.fullname = fullname;
+	}
+
+	// Constructor này sẽ khớp với dữ liệu từ bảng readers
+	public Reader(String student_id, String fullname, String email, String phone, String join_date) {
+		this.student_id = student_id;
+		this.fullname = fullname;
+		this.email = email;
+		this.phone = phone;
+		this.join_date = join_date;
+	}
+
+	// Thêm các Getter và Setter cho tất cả các trường trên
+	public int getId() {
+		return id;
+	}
+
+	public String getStudent_id() {
+		return student_id;
+	}
+
+	public void setStudent_id(String student_id) {
+		this.student_id = student_id;
+	}
+
+	public String getFullname() {
+		return fullname;
+	}
+
+	public void setFullname(String fullname) {
+		this.fullname = fullname;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getJoin_date() {
+		return join_date;
+	}
+
+	public void setJoin_date(String join_date) {
+		this.join_date = join_date;
+	}
+}

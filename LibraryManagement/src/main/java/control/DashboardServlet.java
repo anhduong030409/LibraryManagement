@@ -1,0 +1,36 @@
+package control;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.BookDAO;
+
+/**
+ * Servlet implementation class DashboardServlet
+ */
+@WebServlet("/dashboard")
+public class DashboardServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        
+        BookDAO dao = new BookDAO();
+        
+        // Gọi các hàm đếm từ DAO (Tôi đã hướng dẫn ở bước trước)
+        int totalBooks = dao.getTotalBooks();
+        int[] borrowStats = dao.getActiveBorrowStats();
+        int totalReaders = dao.getTotalReaders();
+        
+        // Đẩy dữ liệu sang JSP bằng setAttribute
+        request.setAttribute("totalBooks", totalBooks);
+        request.setAttribute("activeTickets", borrowStats[0]); // Số phiếu
+        request.setAttribute("activeBooks", borrowStats[1]);   // Số cuốn sách
+        request.setAttribute("totalReaders", totalReaders);
+        
+        // Chuyển hướng tới file JSP của bạn
+        request.getRequestDispatcher("index_1.jsp").forward(request, response);
+    }
+}

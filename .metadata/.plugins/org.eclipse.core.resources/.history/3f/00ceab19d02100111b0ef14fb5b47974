@@ -1,0 +1,125 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Thư Viện Pro - Quản Lý Mượn/Trả</title>
+
+<link
+	href="${pageContext.request.contextPath}/vendor/fontawesome-free/css/all.min.css"
+	rel="stylesheet" type="text/css">
+<link
+	href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+	rel="stylesheet">
+<link href="${pageContext.request.contextPath}/css/sb-admin-2.min.css"
+	rel="stylesheet">
+<link
+	href="${pageContext.request.contextPath}/vendor/datatables/dataTables.bootstrap4.min.css"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link href="${pageContext.request.contextPath}/css/sb-admin-2.min.css"
+	rel="stylesheet">
+
+<link
+	href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+	rel="stylesheet" />
+
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css">
+
+<style>
+/* Fix lỗi chiều cao và căn lề trái cho placeholder */
+.select2-container--bootstrap4 .select2-selection--multiple {
+	min-height: 38px !important;
+	padding: 0 0.5rem !important;
+	display: block !important;
+	/* Dùng block thay vì flex để input không bị đẩy ra giữa */
+}
+
+/* Fix lỗi các tag (choices) bị lệch và tràn */
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__rendered
+	{
+	display: flex !important;
+	flex-wrap: wrap; /* Cho phép rớt dòng nếu chọn quá nhiều sách */
+	padding: 0 !important;
+	margin: 0 !important;
+	list-style: none;
+	align-items: center;
+}
+
+/* Đưa placeholder về sát lề trái chuẩn */
+.select2-container--bootstrap4 .select2-selection--multiple .select2-search__field
+	{
+	margin-left: 0 !important;
+	padding-left: 0 !important;
+	text-align: left !important;
+	height: 36px !important; /* Gần bằng chiều cao input chuẩn */
+	width: 100% !important;
+}
+
+/* Fix màu sắc và khoảng cách cho các tag sách đã chọn */
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice
+	{
+	background-color: #4e73df !important;
+	border: 1px solid #4e73df !important;
+	color: white !important;
+	margin: 4px 2px !important;
+	padding: 2px 8px !important;
+}
+
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice__remove
+	{
+	color: black !important;
+	margin-right: 5px !important;
+}
+</style>
+</head>
+<body>
+<form action="updateTicket" method="post">
+    <input type="hidden" name="tid" value="${ticket.id}">
+
+    <div class="form-group">
+        <label>Chọn Độc Giả:</label>
+        <select name="rid" class="form-control">
+            <c:forEach items="${listR}" var="r">
+                <option value="${r.id}" ${r.id == ticket.readerId ? 'selected' : ''}>
+                    ${r.fullname}
+                </option>
+            </c:forEach>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Chọn Sách Mượn:</label>
+        <select name="bid" id="bookSelectEdit" class="form-control" multiple="multiple">
+            <c:forEach items="${listBooks}" var="b">
+                <option value="${b.id}" 
+                    <c:if test="${ticket.bookIds.contains(b.id.toString())}">selected</c:if>>
+                    ${b.title}
+                </option>
+            </c:forEach>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Hạn trả:</label>
+        <input type="text" name="ddate" value="${ticket.dueDate}" class="form-control date-input">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
+</form>
+
+<script>
+    $(document).ready(function() {
+        $('#bookSelectEdit').select2({ theme: 'bootstrap4' });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+package control;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.BookDAO;
+
+/**
+ * Servlet implementation class ExportServlet
+ */
+@WebServlet("/export")
+public class ExportServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+	        throws ServletException, IOException {
+	    response.setContentType("text/csv; charset=UTF-8");
+	    response.setCharacterEncoding("UTF-8");
+	    response.setHeader("Content-Disposition", "attachment; filename=bao_cao_thu_vien.csv");
+
+	    // Thêm BOM (Byte Order Mark) để Excel nhận diện được tiếng Việt có dấu
+	    response.getWriter().write('\ufeff');
+
+	    BookDAO dao = new BookDAO();
+	    List<String[]> data = dao.getReportData();
+
+	    PrintWriter writer = response.getWriter();
+	 // Ghi tiêu đề cột (Dùng dấu ; để Excel tự động chia cột)
+	    writer.println("Tên độc giả;Danh sách sách;Ngày mượn;Hạn trả;Trạng thái");
+
+	    
+	 // Ghi các hàng dữ liệu
+	    for (String[] row : data) {
+	        writer.println("<tr>");
+	        for (int i = 0; i < row.length; i++) {
+	            String cellData = row[i];
+	            
+	            // Nếu là cột Danh sách sách, thay thế dấu phân cách thành thẻ xuống dòng
+	            if (i == 1) { 
+	                // Giả sử SQL của bạn đang gộp sách bằng dấu "; "
+	                cellData = cellData.replace("; ", "<br style='mso-data-placement:same-cell;'>");
+	                cellData = cellData.replace(";", "<br style='mso-data-placement:same-cell;'>");
+	            }
+	            
+	            // style 'mso-data-placement:same-cell' giúp Excel hiểu đây là xuống dòng trong 1 ô
+	            writer.println("<td style='vertical-align: top;'>" + cellData + "</td>");
+	        }
+	        writer.println("</tr>");
+	    }
+	}
+
+}

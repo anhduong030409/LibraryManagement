@@ -1,0 +1,39 @@
+package control;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.BookDAO;
+import entity.Book;
+import entity.BorrowTicket;
+import entity.Reader;
+
+/**
+ * Servlet implementation class BorrowControl
+ */
+@WebServlet(name = "BorrowControl", urlPatterns = {"/borrow"})
+public class BorrowControl extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+    	BookDAO dao = new BookDAO();
+    	
+    	// 1. Lấy danh sách phiếu mượn để hiện bảng
+        List<BorrowTicket> listTicket = dao.getAllBorrowTickets();
+        
+        // 2. Lấy dữ liệu cho Form thêm mới (luôn tươi mới từ DB)
+        List<Reader> listR = dao.getListReaderForBorrow();
+        List<Book> listB = dao.getListBookForBorrow();
+        
+        request.setAttribute("listB", listTicket);
+        request.setAttribute("listR", listR); // Đẩy dữ liệu Độc giả vào Form
+        request.setAttribute("listBooks", listB); // Đẩy dữ liệu Sách vào Form
+        
+        request.getRequestDispatcher("borrow-list.jsp").forward(request, response);
+    }
+}

@@ -1,0 +1,58 @@
+package control;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.BookDAO;
+
+/**
+ * Servlet implementation class AddReaderControl
+ */
+@WebServlet(name = "AddReaderControl", urlPatterns = {"/addReader"})
+public class AddReaderControl extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public AddReaderControl() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// 1. Cho phép nhận tiếng Việt từ Form
+        request.setCharacterEncoding("UTF-8");
+
+        // 2. Lấy dữ liệu từ các ô input trong JSP (dựa vào thuộc tính name="")
+        String sid = request.getParameter("sid");
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+        String date = request.getParameter("date");
+
+        // 3. Gọi DAO để chèn vào Database
+        BookDAO dao = new BookDAO();
+        dao.insertReader(sid, name, email, phone, date);
+
+        // 4. Thêm xong, điều hướng về lại trang danh sách độc giả
+        // Giả sử Servlet hiển thị danh sách của bạn có URL là /readers
+        response.sendRedirect("readers");
+	}
+
+}

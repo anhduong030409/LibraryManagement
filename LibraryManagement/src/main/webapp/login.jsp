@@ -38,17 +38,17 @@
                                     </div>
                                     <form class="user" action="login" method="post">
                                         <div class="form-group">
-                                            <input type="text" name="user" class="form-control form-control-user"
+                                            <input type="text" name="user" value="${cookie.cUser.value}" class="form-control form-control-user"
                                                 id="exampleInputEmail" aria-describedby="emailHelp"
                                                 placeholder="Tên đăng nhập..." required>
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" name="pass" class="form-control form-control-user"
+                                            <input type="password" name="pass" value="${cookie.cPass.value}" class="form-control form-control-user"
                                                 id="exampleInputPassword" placeholder="Mật khẩu" required>
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck">
+                                                <input type="checkbox" name="rem" ${cookie.cRem.value == 'ON' ? 'checked' : ''} class="custom-control-input" id="customCheck">
                                                 <label class="custom-control-label" for="customCheck">Ghi nhớ đăng nhập</label>
                                             </div>
                                         </div>
@@ -62,7 +62,7 @@
                                         <a class="small" href="#">Quên mật khẩu?</a>
                                     </div>
                                     <div class="text-center">
-                                        <a class="small" href="#">Liên hệ kỹ thuật: 0123.456.789</a>
+                                        <a class="small" href="#">Vui lòng liên hệ kỹ thuật: 0123.456.789</a>
                                     </div>
                                 </div>
                             </div>

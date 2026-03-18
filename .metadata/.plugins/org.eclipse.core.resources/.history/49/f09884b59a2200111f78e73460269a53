@@ -1,0 +1,79 @@
+package control;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+
+import dao.BookDAO;
+
+/**
+ * Servlet implementation class AddControl
+ */
+@WebServlet(name = "AddControl", urlPatterns = {"/add"}) // Phải có dấu gạch chéo /
+@MultipartConfig(
+	    fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+	    maxFileSize = 1024 * 1024 * 10,      // 10MB
+	    maxRequestSize = 1024 * 1024 * 50   // 50MB
+	)
+public class AddControl extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public AddControl() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+	        throws ServletException, IOException {
+	    request.setCharacterEncoding("UTF-8"); // Để không bị lỗi font tiếng Việt
+
+	    // 1. Lấy dữ liệu từ các ô Input của Form
+	    String title = request.getParameter("title");
+	    String author = request.getParameter("author");
+	    String category = request.getParameter("category");
+	    String quantity = request.getParameter("quantity");
+	    String image = request.getParameter("image");
+	    
+	 // 1. Lấy link ảnh từ URL (nếu có)
+        String imageUrl = request.getParameter("image_url");
+
+        // 2. Xử lý file tải lên (nếu có)
+        Part filePart = request.getPart("image_file");
+        String finalImagePath = imageUrl;
+
+        if (filePart != null && filePart.getSize() > 0) {
+            String fileName = filePart.getSubmittedFileName();
+            // Đường dẫn thư mục lưu ảnh trong project của bạn
+            String uploadPath = getServletContext().getRealPath("/") + "img/" + fileName;
+            filePart.write(uploadPath);
+            finalImagePath = "img/" + fileName; // Lưu đường dẫn tương đối vào DB
+        }
+
+	    // 2. Gọi DAO để chèn vào Database
+	    BookDAO dao = new BookDAO();
+	    dao.insertBook(title, author, category, Integer.parseInt(quantity), image);
+
+	    // 3. Thêm xong thì quay về trang danh sách sách
+	    response.sendRedirect("books"); 
+	}
+
+}

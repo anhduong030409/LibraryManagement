@@ -1,0 +1,42 @@
+package control;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import dao.BookDAO;
+
+/**
+ * Servlet implementation class EditControl
+ */
+@WebServlet("/edit")
+public class EditControl extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+	        throws ServletException, IOException {
+	    request.setCharacterEncoding("UTF-8");
+
+	    // 1. Lấy dữ liệu từ các ô input thông qua thuộc tính 'name'
+	    String id = request.getParameter("id");
+	    String title = request.getParameter("title");
+	    String author = request.getParameter("author");
+	    String category = request.getParameter("category");
+	    String quantity = request.getParameter("quantity");
+	    
+	    // BẠN CẦN THÊM DÒNG NÀY:
+	    String image = request.getParameter("image"); 
+
+	    // 2. Truyền vào hàm update của DAO
+	    BookDAO dao = new BookDAO();
+	    // Đảm bảo hàm updateBook nhận đúng và đủ tham số (bao gồm image)
+	    dao.updateBook(id, title, author, category, Integer.parseInt(quantity), image);
+
+	    // 3. Chuyển hướng về trang danh sách
+	    response.sendRedirect("books");
+	}
+
+}

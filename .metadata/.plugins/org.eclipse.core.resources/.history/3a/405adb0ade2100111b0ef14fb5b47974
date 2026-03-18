@@ -1,0 +1,522 @@
+package dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import context.DBContext;
+import entity.Book;
+import entity.BorrowTicket;
+import entity.Reader;
+import entity.User;
+
+public class BookDAO {
+	public List<Book> getAllBooks() {
+		List<Book> list = new ArrayList<>();
+		String query = "SELECT * FROM books";
+		try {
+			Connection conn = new DBContext().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				// Giả sử bảng books có 5 cột: id, title, author, category, quantity, image
+				list.add(new Book(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
+						rs.getString(6)));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	// xóa
+	public void deleteBook(String id) {
+		String query = "DELETE FROM books WHERE id = ?";
+		try {
+			Connection conn = new DBContext().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setString(1, id);
+			ps.executeUpdate();
+		} catch (Exception e) {
+		}
+	}
+
+	// thêm
+	public void insertBook(String title, String author, String category, int quantity, String image) {
+		String query = "INSERT INTO books (title, author, category, quantity, image) VALUES (?, ?, ?, ?, ?)";
+		try {
+			Connection conn = new DBContext().getConnection(); // Kết nối DB
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setString(1, title);
+			ps.setString(2, author);
+			ps.setString(3, category);
+			ps.setInt(4, quantity);
+			ps.setString(5, image); // Thêm link ảnh
+			ps.executeUpdate(); // Thực thi lệnh insert
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	// sửa
+	// 1. Lấy thông tin 1 cuốn sách dựa vào ID
+	public Book getBookByID(String id) {
+		String query = "select * from books where id = ?";
+		try {
+			Connection conn = new DBContext().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setString(1, id);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				return new Book(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
+						rs.getString(6));
+			}
+		} catch (Exception e) {
+		}
+		return null;
+	}
+
+	// 2. Cập nhật thông tin sách
+	public void updateBook(String id, String title, String author, String category, int quantity, String image) {
+		// Câu lệnh SQL phải có 'image = ?'
+		String query = "UPDATE books SET title = ?, author = ?, category = ?, quantity = ?, image = ? WHERE id = ?";
+		try {
+			Connection conn = new DBContext().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setString(1, title);
+			ps.setString(2, author);
+			ps.setString(3, category);
+			ps.setInt(4, quantity);
+			ps.setString(5, image); // Đây là link ảnh mới
+			ps.setString(6, id);
+
+			ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	// ------------------------------------------------------------------------------------------------
+	public List<Book> searchAll(String txtSearch) {
+		List<Book> list = new ArrayList<>();
+		String query = "SELECT * FROM books WHERE LOWER(title) LIKE ? OR LOWER(author) LIKE ?";
+		try {
+			Connection conn = new DBContext().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			String searchPattern = "%" + txtSearch.toLowerCase() + "%";
+			ps.setString(1, searchPattern);
+			ps.setString(2, searchPattern);
+
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				// Nhớ lấy đủ 6 tham số bao gồm cả cột image (rs.getString(6))
+				list.add(new Book(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5),
+						rs.getString(6)));
+			}
+		} catch (Exception e) {
+		}
+		return list;
+	}
+
+	// ------------------------------------------------------------------------------------
+	public User login(String user, String pass) {
+		// Câu lệnh SQL truy vấn vào bảng users mới tạo
+		String query = "SELECT * FROM users WHERE username = ? AND password = ?";
+		try {
+			Connection conn = new DBContext().getConnection(); // Kết nối DB
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setString(1, user);
+			ps.setString(2, pass);
+			ResultSet rs = ps.executeQuery();
+
+			if (rs.next()) {
+				return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getNString(4), // Lấy fullname tiếng
+																									// Việt
+						rs.getInt(5));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null; // Trả về null nếu không tìm thấy tài khoản khớp
+	}
+
+//	    ---------------------------------------------------------------------------------------------------------------------
+	// Thêm độc giả
+	public void insertReader(String sid, String name, String email, String phone, String date) {
+		// Câu lệnh SQL phải khớp với tên bảng và cột trong MySQL (image_ba0266.png)
+		String query = "INSERT INTO readers (student_id, fullname, email, phone, join_date) VALUES (?, ?, ?, ?, ?)";
+		try {
+			Connection conn = new DBContext().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setString(1, sid);
+			ps.setString(2, name);
+			ps.setString(3, email);
+			ps.setString(4, phone);
+			ps.setString(5, date);
+
+			ps.executeUpdate(); // Thực thi lệnh
+		} catch (Exception e) {
+			e.printStackTrace(); // In lỗi ra Console để kiểm tra nếu bị trùng mã SV
+		}
+	}
+
+	public List<Reader> getAllReaders() { // Đổi List<User> thành List<Reader>
+		List<Reader> list = new ArrayList<>();
+		String query = "SELECT * FROM readers";
+		try {
+			Connection conn = new DBContext().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				// Bây giờ Constructor này đã khớp hoàn toàn với Reader.java
+				list.add(new Reader(rs.getString("student_id"), rs.getString("fullname"), rs.getString("email"),
+						rs.getString("phone"), rs.getString("join_date")));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	// Thêm vào class BookDAO
+	public void deleteReader(String sid) {
+		String query = "DELETE FROM readers WHERE student_id = ?";
+		try {
+			Connection conn = new DBContext().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setString(1, sid);
+			ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	// ------------------------------------------------------------------------------
+
+	// 1. Lấy thông tin 1 độc giả dựa trên Mã SV
+	public Reader getReaderBySID(String sid) {
+		String query = "SELECT * FROM readers WHERE student_id = ?";
+		try {
+			Connection conn = new DBContext().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setString(1, sid);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				// Dùng trực tiếp tên cột để không bao giờ bị lấy nhầm dữ liệu
+				return new Reader(rs.getString("student_id"), rs.getString("fullname"), rs.getString("email"),
+						rs.getString("phone"), rs.getString("join_date"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	// 2. Cập nhật thông tin vào Database
+	public void updateReader(String sid, String name, String email, String phone, String date) {
+		String query = "UPDATE readers SET fullname=?, email=?, phone=?, join_date=? WHERE student_id=?";
+		try {
+			Connection conn = new DBContext().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setString(1, name);
+			ps.setString(2, email);
+			ps.setString(3, phone);
+			ps.setString(4, date);
+			ps.setString(5, sid);
+			ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	// -----------------------------------------------------------------------------------------------------------------------------------
+	// lấy dữ liệu từ database
+	public List<BorrowTicket> getAllBorrowTickets() {
+		List<BorrowTicket> list = new ArrayList<>();
+		// SQL JOIN để lấy Fullname và Title thay vì ID
+		String query = "SELECT t.id, r.fullname AS readerName, "
+	            + "GROUP_CONCAT(b.title SEPARATOR '<br>') AS bookTitle, "
+	            + "t.borrow_date, t.due_date, "
+	            + "CASE "
+	            + "    WHEN t.status = 'Đã trả' THEN 'Đã trả' "
+	            + "    WHEN t.due_date < CURDATE() THEN 'Quá hạn' "
+	            + "    ELSE 'Đang mượn' "
+	            + "END AS current_status " // Tự động tính toán trạng thái
+	            + "FROM borrow_tickets t "
+	            + "JOIN readers r ON t.reader_id = r.id "
+	            + "JOIN borrow_details d ON t.id = d.ticket_id "
+	            + "JOIN books b ON d.book_id = b.id "
+	            + "GROUP BY t.id, r.fullname, t.borrow_date, t.due_date, t.status;";
+		try {
+			Connection conn = new DBContext().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				list.add(new BorrowTicket(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4),
+						rs.getString(5), rs.getString(6)));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	// Thêm mới danh sách lập phiếu mượn
+	// 1. Lấy danh sách độc giả để đổ vào dropdown
+	public List<Reader> getListReaderForBorrow() {
+		List<Reader> list = new ArrayList<>();
+		String query = "SELECT id, student_id, fullname FROM readers";
+		try {
+			Connection conn = new DBContext().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				list.add(new Reader(rs.getInt("id"), rs.getString("student_id"), rs.getString("fullname")));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	// 2. Lấy danh sách sách còn trong kho (>0)
+	public List<Book> getListBookForBorrow() {
+		List<Book> list = new ArrayList<>();
+		String query = "SELECT id, title FROM books WHERE quantity > 0";
+		try {
+			Connection conn = new DBContext().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				list.add(new Book(rs.getInt("id"), rs.getString("title")));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	// 3. Lưu phiếu mượn mới vào Database
+	public void insertBorrowTicket(int rid, int bid, String bdate, String ddate) {
+		String query = "INSERT INTO borrow_tickets (reader_id, book_id, borrow_date, due_date, status) VALUES (?, ?, ?, ?, 'Đang mượn')";
+		try {
+			Connection conn = new DBContext().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setInt(1, rid);
+			ps.setInt(2, bid);
+			ps.setString(3, bdate);
+			ps.setString(4, ddate);
+			ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void insertMultipleBorrow(int rid, String[] bids, String bdate, String ddate) {
+	    Connection conn = null;
+	    try {
+	        conn = new DBContext().getConnection();
+	        conn.setAutoCommit(false); // Bắt đầu giao dịch để đảm bảo tính đồng bộ
+
+	        // 1. Chèn vào bảng cha (borrow_tickets)
+	        String sqlTicket = "INSERT INTO borrow_tickets (reader_id, borrow_date, due_date, status) VALUES (?, ?, ?, 'Đang mượn')";
+	        PreparedStatement ps1 = conn.prepareStatement(sqlTicket, Statement.RETURN_GENERATED_KEYS);
+	        ps1.setInt(1, rid);
+	        ps1.setString(2, bdate);
+	        ps1.setString(3, ddate);
+	        ps1.executeUpdate();
+
+	        // Lấy ID phiếu mượn vừa tự sinh ra
+	        ResultSet rs = ps1.getGeneratedKeys();
+	        int ticketId = 0;
+	        if (rs.next()) ticketId = rs.getInt(1);
+
+	        // 2. Chèn vào bảng con (borrow_details) VÀ Cập nhật kho sách (books)
+	        String sqlDetail = "INSERT INTO borrow_details (ticket_id, book_id) VALUES (?, ?)";
+	        String sqlUpdateQty = "UPDATE books SET quantity = quantity - 1 WHERE id = ?"; // Lệnh trừ kho
+	        
+	        PreparedStatement ps2 = conn.prepareStatement(sqlDetail);
+	        PreparedStatement ps3 = conn.prepareStatement(sqlUpdateQty);
+
+	        for (String bid : bids) {
+	            int bookId = Integer.parseInt(bid);
+	            
+	            // Thêm vào chi tiết phiếu mượn
+	            ps2.setInt(1, ticketId);
+	            ps2.setInt(2, bookId);
+	            ps2.addBatch();
+
+	            // Giảm số lượng trong bảng books
+	            ps3.setInt(1, bookId);
+	            ps3.addBatch();
+	        }
+	        
+	        ps2.executeBatch(); // Lưu toàn bộ chi tiết sách
+	        ps3.executeBatch(); // Trừ kho toàn bộ sách
+
+	        conn.commit(); // Hoàn tất giao dịch
+	    } catch (Exception e) {
+	        try { if(conn != null) conn.rollback(); } catch(Exception ex) {} // Lỗi thì hồi lại dữ liệu
+	        e.printStackTrace();
+	    }
+	}
+	//--------------------------------------------------
+	//phương thức thực hiện đồng thời việc cập nhật trạng thái phiếu và tăng lại số lượng sách trong kho
+	public void returnTicket(String tid) {
+	    Connection conn = null;
+	    try {
+	        conn = new DBContext().getConnection();
+	        conn.setAutoCommit(false); // Bắt đầu giao dịch (Transaction)
+
+	        // 1. Cập nhật trạng thái phiếu mượn thành 'Đã trả'
+	        String sqlUpdateTicket = "UPDATE borrow_tickets SET status = 'Đã trả' WHERE id = ?";
+	        PreparedStatement ps1 = conn.prepareStatement(sqlUpdateTicket);
+	        ps1.setString(1, tid);
+	        ps1.executeUpdate();
+
+	        // 2. Lấy danh sách ID sách thuộc phiếu mượn này để hoàn kho
+	        String sqlGetBooks = "SELECT book_id FROM borrow_details WHERE ticket_id = ?";
+	        PreparedStatement ps2 = conn.prepareStatement(sqlGetBooks);
+	        ps2.setString(1, tid);
+	        ResultSet rs = ps2.executeQuery();
+
+	        // 3. Tăng số lượng (+1) cho từng đầu sách trong kho
+	        String sqlUpdateQuantity = "UPDATE books SET quantity = quantity + 1 WHERE id = ?";
+	        PreparedStatement ps3 = conn.prepareStatement(sqlUpdateQuantity);
+	        while (rs.next()) {
+	            ps3.setInt(1, rs.getInt("book_id"));
+	            ps3.executeUpdate();
+	        }
+
+	        conn.commit(); // Xác nhận hoàn tất mọi thay đổi
+	    } catch (Exception e) {
+	        try { if (conn != null) conn.rollback(); } catch (Exception ex) {} // Lỗi thì quay lại trạng thái cũ
+	        e.printStackTrace();
+	    }
+	}
+	
+	// 1. Lấy thông tin phiếu mượn kèm chuỗi ID sách (cách nhau bằng dấu phẩy)
+	public BorrowTicket getTicketByID(String tid) {
+	    // Query lấy thông tin và gộp ID sách thành chuỗi "1,2,3"
+	    String query = "SELECT t.id, t.reader_id, t.due_date, GROUP_CONCAT(d.book_id) as bookIds "
+	                 + "FROM borrow_tickets t "
+	                 + "JOIN borrow_details d ON t.id = d.ticket_id "
+	                 + "WHERE t.id = ? GROUP BY t.id";
+	    try {
+	        Connection conn = new DBContext().getConnection();
+	        PreparedStatement ps = conn.prepareStatement(query);
+	        ps.setString(1, tid);
+	        ResultSet rs = ps.executeQuery();
+	        if (rs.next()) {
+	            // Lưu ý: Bạn cần thêm 1 Constructor vào entity BorrowTicket (int id, int readerId, String dueDate, String bookIds)
+	            return new BorrowTicket(rs.getInt("id"), rs.getInt("reader_id"), 
+	                                    rs.getString("due_date"), rs.getString("bookIds"));
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return null;
+	}
+
+	// 2. Thực thi cập nhật phiếu mượn
+	public void updateTicket(int tid, int rid, String ddate, String[] bids) {
+	    Connection conn = null;
+	    try {
+	        conn = new DBContext().getConnection();
+	        conn.setAutoCommit(false); // Bắt đầu giao dịch
+
+	        // 1. HOÀN KHO: Lấy danh sách sách cũ để cộng lại số lượng trước khi xóa
+	        String sqlGetOldBooks = "SELECT book_id FROM borrow_details WHERE ticket_id = ?";
+	        PreparedStatement psOld = conn.prepareStatement(sqlGetOldBooks);
+	        psOld.setInt(1, tid);
+	        ResultSet rsOld = psOld.executeQuery();
+	        
+	        String sqlPlusQty = "UPDATE books SET quantity = quantity + 1 WHERE id = ?";
+	        PreparedStatement psPlus = conn.prepareStatement(sqlPlusQty);
+	        while (rsOld.next()) {
+	            psPlus.setInt(1, rsOld.getInt("book_id"));
+	            psPlus.addBatch();
+	        }
+	        psPlus.executeBatch();
+
+	        // 2. CẬP NHẬT PHIẾU CHA: Độc giả và ngày trả
+	        String sqlUpdateTicket = "UPDATE borrow_tickets SET reader_id = ?, due_date = ? WHERE id = ?";
+	        PreparedStatement ps1 = conn.prepareStatement(sqlUpdateTicket);
+	        ps1.setInt(1, rid);
+	        ps1.setString(2, ddate);
+	        ps1.setInt(3, tid);
+	        ps1.executeUpdate();
+
+	        // 3. XÓA CHI TIẾT CŨ
+	        String sqlDeleteDetails = "DELETE FROM borrow_details WHERE ticket_id = ?";
+	        PreparedStatement ps2 = conn.prepareStatement(sqlDeleteDetails);
+	        ps2.setInt(1, tid);
+	        ps2.executeUpdate();
+
+	        // 4. CHÈN CHI TIẾT MỚI & TRỪ KHO MỚI
+	        String sqlInsertDetail = "INSERT INTO borrow_details (ticket_id, book_id) VALUES (?, ?)";
+	        String sqlMinusQty = "UPDATE books SET quantity = quantity - 1 WHERE id = ?";
+	        
+	        PreparedStatement psInsert = conn.prepareStatement(sqlInsertDetail);
+	        PreparedStatement psMinus = conn.prepareStatement(sqlMinusQty);
+
+	        for (String bId : bids) {
+	            int bookId = Integer.parseInt(bId);
+	            // Chèn vào bảng chi tiết
+	            psInsert.setInt(1, tid);
+	            psInsert.setInt(2, bookId);
+	            psInsert.addBatch();
+	            
+	            // Trừ số lượng trong kho
+	            psMinus.setInt(1, bookId);
+	            psMinus.addBatch();
+	        }
+	        psInsert.executeBatch();
+	        psMinus.executeBatch();
+
+	        conn.commit(); // Xác nhận mọi thay đổi
+	    } catch (Exception e) {
+	        try { if(conn != null) conn.rollback(); } catch(Exception ex) {}
+	        e.printStackTrace();
+	    }
+	}
+	
+	//PHẦN DASHBOARD
+	// Đếm tổng số đầu sách
+	public int getTotalBooks() {
+	    String query = "SELECT SUM(quantity) FROM books";
+	    try {
+	        Connection conn = new DBContext().getConnection();
+	        PreparedStatement ps = conn.prepareStatement(query);
+	        ResultSet rs = ps.executeQuery();
+	        if (rs.next()) return rs.getInt(1);
+	    } catch (Exception e) { e.printStackTrace(); }
+	    return 0;
+	}
+
+	// Đếm số phiếu đang mượn (Trạng thái: Đang mượn hoặc Quá hạn)
+	public int getActiveTickets() {
+	    String query = "SELECT COUNT(*) FROM borrow_tickets WHERE status != N'Đã trả'";
+	    try {
+	        Connection conn = new DBContext().getConnection();
+	        PreparedStatement ps = conn.prepareStatement(query);
+	        ResultSet rs = ps.executeQuery();
+	        if (rs.next()) return rs.getInt(1);
+	    } catch (Exception e) { e.printStackTrace(); }
+	    return 0;
+	}
+
+	// Đếm tổng số độc giả
+	public int getTotalReaders() {
+	    String query = "SELECT COUNT(*) FROM readers";
+	    try {
+	        Connection conn = new DBContext().getConnection();
+	        PreparedStatement ps = conn.prepareStatement(query);
+	        ResultSet rs = ps.executeQuery();
+	        if (rs.next()) return rs.getInt(1);
+	    } catch (Exception e) { e.printStackTrace(); }
+	    return 0;
+	}
+}

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;LibraryManagement/src/main/java/control/ReturnTicketControl.java&apos; to &apos;ReturnTicketServlet.java&apos;" description="Rename resource &apos;ReturnTicketControl.java&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/main/java/control/ReturnTicketControl.java" name="ReturnTicketServlet.java" stamp="1773727967195" updateReferences="true"/>
+</session>
